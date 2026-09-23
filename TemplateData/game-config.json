@@ -23,8 +23,8 @@
         "defaultScreenHeight": 960,
         "runInBackground": true,
         "webGLTemplate": "PROJECT:AdSupportedTemplate",
-        "webGLCompressionFormat": 0,
-        "defaultWebScreenOrientation": "Landscape"
+        "webGLCompressionFormat": 1,
+        "defaultWebScreenOrientation": "Portrait"
     },
     "adsConfig": {
         "testMode": true,

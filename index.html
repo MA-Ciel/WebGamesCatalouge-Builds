@@ -26,7 +26,7 @@
   <body>
     <!-- Unity Container -->
     <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width="960" height="600" tabindex="-1"></canvas>
+      <canvas id="unity-canvas" width="600" height="960" tabindex="-1"></canvas>
       
       <!-- Loading Screen -->
       <div id="unity-loading-bar">
@@ -208,8 +208,8 @@
       };
 
       // Responsive Canvas Auto-Fit (Aspect Ratio Preserving)
-      var targetWidth = parseInt("960") || 600;
-      var targetHeight = parseInt("600") || 960;
+      var targetWidth = parseInt("600") || 600;
+      var targetHeight = parseInt("960") || 960;
       
       function resizeCanvas() {
         if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) return;

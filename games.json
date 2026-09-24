@@ -50,5 +50,18 @@
     "featured": false,
     "orientation": "landscape",
     "description": "Manage your 24/7 convenience store! Stock shelves, scan items, and serve happy customers in 3D!"
+  },
+  {
+    "id": "car-racing",
+    "title": "Car Racing 3D",
+    "category": "Action",
+    "branch": "CarRacing",
+    "path": "./CarRacing/",
+    "thumbnail": "./assets/car-racing.jpg",
+    "rating": "4.9",
+    "plays": "31.4K",
+    "featured": false,
+    "orientation": "landscape",
+    "description": "High-speed neon highway racing! Dodge traffic, drift through sharp turns, and push your limits!"
   }
 ]

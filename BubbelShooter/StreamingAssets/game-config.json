@@ -19,8 +19,8 @@
         "Assets/Screenshots/screenshot2.png"
     ],
     "playerSettings": {
-        "defaultScreenWidth": 960,
-        "defaultScreenHeight": 600,
+        "defaultScreenWidth": 600,
+        "defaultScreenHeight": 960,
         "runInBackground": true,
         "webGLTemplate": "PROJECT:AdSupportedTemplate",
         "webGLCompressionFormat": 0,

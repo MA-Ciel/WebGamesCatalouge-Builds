@@ -3,35 +3,183 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity Web Player | CIEL Web Game</title>
+    <title>CIEL Web Game | CIEL WebGames</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
+
+    <!-- ======================================================== -->
+    <!-- GOOGLE H5 GAMES ADS / AD PLACEMENT API SCRIPT            -->
+    <!-- Replace ca-pub-0000000000000000 with your real AdSense ID-->
+    <!-- ======================================================== -->
+    <script async
+      data-ad-client="ca-pub-0000000000000000"
+      data-ad-channel="0000000000"
+      data-ad-frequency-hint="30s"
+      data-adbreak-test="on"
+      crossorigin="anonymous"
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js">
+    </script>
+
+    <!-- Dedicated WebGL Communication & Ad Bridge Script -->
+    <script src="TemplateData/game-bridge.js"></script>
   </head>
   <body>
+    <!-- Floating Web Developer Toolbar for testing ad events from browser -->
+    <div id="ad-dev-toolbar">
+      <span class="dev-badge">Ads Testbed</span>
+      <button class="dev-btn" onclick="window.GameBridge.showInterstitial('dev_test_break')">Test Interstitial</button>
+      <button class="dev-btn" onclick="window.GameBridge.showRewarded('dev_test_reward')">Test Rewarded</button>
+    </div>
+
+    <!-- Unity Container -->
     <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width=600 height=960 tabindex="-1"></canvas>
+      <canvas id="unity-canvas" width="600" height="960" tabindex="-1"></canvas>
+      
+      <!-- Loading Screen -->
       <div id="unity-loading-bar">
         <div id="unity-logo"></div>
         <div id="unity-progress-bar-empty">
           <div id="unity-progress-bar-full"></div>
         </div>
+        <div id="loading-text">Loading Game...</div>
       </div>
-      <div id="unity-warning"> </div>
+
+      <!-- Warnings / Errors -->
+      <div id="unity-warning"></div>
+
+      <!-- Footer Bar -->
       <div id="unity-footer">
-        <div id="unity-logo-title-footer"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">CIEL Web Game</div>
+        <div id="unity-build-title">
+          <span>🎮</span> CIEL Web Game
+        </div>
+        <div id="unity-fullscreen-button" title="Toggle Fullscreen"></div>
       </div>
     </div>
+
+    <!-- ============================================== -->
+    <!-- INTERACTIVE AD MODAL (TEST & FALLBACK OVERLAY) -->
+    <!-- ============================================== -->
+    <div id="ad-modal-overlay">
+      <div class="ad-card">
+        <div class="ad-header">
+          <div class="ad-tag-badge" id="ad-type-badge">SPONSORED AD</div>
+          <div class="ad-placement-name" id="ad-placement-label">placement: default</div>
+        </div>
+
+        <div class="ad-content-box">
+          <div class="ad-preview-graphic" id="ad-icon">🎁</div>
+          <h2 class="ad-sponsor-title" id="ad-title">Awesome Partner Game</h2>
+          <p class="ad-sponsor-desc" id="ad-description">
+            Discover breathtaking 3D worlds, compete with players worldwide, and claim epic treasures today!
+          </p>
+          <div class="ad-timer-badge">
+            <span>Time Remaining:</span>
+            <span class="ad-timer-count" id="ad-countdown-sec">5s</span>
+          </div>
+        </div>
+
+        <div class="ad-actions">
+          <button class="ad-btn ad-btn-skip" id="ad-skip-btn" disabled>Wait 5s...</button>
+          <button class="ad-btn ad-btn-reward" id="ad-reward-btn">CLAIM REWARD</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MOBILE ORIENTATION WARNING OVERLAY             -->
+    <!-- ============================================== -->
+    <div id="orientation-overlay">
+      <div class="orientation-card">
+        <div class="phone-icon-wrapper">
+          <div id="phone-animation-icon" class="phone-rotate-icon to-portrait">
+            <div class="phone-device"></div>
+          </div>
+        </div>
+        <h2 class="orientation-title" id="orientation-title">Please Rotate Your Device</h2>
+        <p class="orientation-desc" id="orientation-desc">
+          This game is optimized for Portrait mode. Hold your phone vertically for the best gaming experience.
+        </p>
+        <button class="orientation-btn-bypass" onclick="dismissOrientationOverlay()">Play in Current Mode</button>
+      </div>
+    </div>
+
+    <!-- Unity 6 WebGL Runtime Loader -->
     <script>
       var canvas = document.querySelector("#unity-canvas");
 
-      // Shows a temporary message banner/ribbon for a few seconds, or
-      // a permanent error message on top of the canvas if type=='error'.
-      // If type=='warning', a yellow highlight color is used.
-      // Modify or remove this function to customize the visually presented
-      // way that non-critical warnings and error messages are presented to the
-      // user.
+      // Mobile Device Orientation & Touch Handling
+      var orientationUserDismissed = false;
+
+      function dismissOrientationOverlay() {
+        orientationUserDismissed = true;
+        var overlay = document.getElementById("orientation-overlay");
+        if (overlay) overlay.style.display = "none";
+      }
+
+      function checkDeviceOrientation() {
+        var overlay = document.getElementById("orientation-overlay");
+        if (!overlay) return;
+
+        if (orientationUserDismissed) {
+          overlay.style.display = "none";
+          return;
+        }
+
+        var isMobile = /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                       (window.matchMedia && window.matchMedia("(max-width: 900px) and (pointer: coarse)").matches);
+
+        if (!isMobile) {
+          overlay.style.display = "none";
+          return;
+        }
+
+        // Target orientation from game config (default: Portrait)
+        var targetOrientation = "Portrait";
+        if (window.GameBridge && window.GameBridge.gameData && window.GameBridge.gameData.playerSettings && window.GameBridge.gameData.playerSettings.defaultWebScreenOrientation) {
+          targetOrientation = window.GameBridge.gameData.playerSettings.defaultWebScreenOrientation;
+        }
+
+        if (targetOrientation === "Any") {
+          overlay.style.display = "none";
+          return;
+        }
+
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        var height = window.innerHeight || document.documentElement.clientHeight;
+        var isPortrait = height > width;
+
+        var titleElem = document.getElementById("orientation-title");
+        var descElem = document.getElementById("orientation-desc");
+        var phoneIcon = document.getElementById("phone-animation-icon");
+
+        if (targetOrientation === "Landscape" && isPortrait) {
+          if (titleElem) titleElem.innerText = "Please Rotate Your Device";
+          if (descElem) descElem.innerText = "This game is optimized for Landscape mode. Turn your phone sideways for the best gaming experience.";
+          if (phoneIcon) phoneIcon.className = "phone-rotate-icon to-landscape";
+          overlay.style.display = "flex";
+        } else if (targetOrientation === "Portrait" && !isPortrait) {
+          if (titleElem) titleElem.innerText = "Please Rotate Your Device";
+          if (descElem) descElem.innerText = "This game is optimized for Portrait mode. Hold your phone vertically for the best gaming experience.";
+          if (phoneIcon) phoneIcon.className = "phone-rotate-icon to-portrait";
+          overlay.style.display = "flex";
+        } else {
+          overlay.style.display = "none";
+        }
+      }
+
+      window.checkDeviceOrientation = checkDeviceOrientation;
+      window.addEventListener("resize", checkDeviceOrientation);
+      window.addEventListener("orientationchange", checkDeviceOrientation);
+      document.addEventListener("DOMContentLoaded", checkDeviceOrientation);
+
+      // Prevent default page scroll on mobile touch
+      document.addEventListener('touchmove', function(e) {
+        if (e.target === canvas || e.target.id === 'unity-container') {
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      // Banner message helper
       function unityShowBanner(msg, type) {
         var warningBanner = document.querySelector("#unity-warning");
         function updateBannerVisibility() {
@@ -40,9 +188,9 @@
         var div = document.createElement('div');
         div.innerHTML = msg;
         warningBanner.appendChild(div);
-        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        if (type == 'error') div.style = 'background: #e53935; color: white; padding: 12px; font-weight: bold;';
         else {
-          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+          if (type == 'warning') div.style = 'background: #fbc02d; color: #111; padding: 12px; font-weight: 500;';
           setTimeout(function() {
             warningBanner.removeChild(div);
             updateBannerVisibility();
@@ -51,6 +199,7 @@
         updateBannerVisibility();
       }
 
+      // Configuration
       var buildUrl = "Build";
       var loaderUrl = buildUrl + "/WebGamesCatalouge-Builds.loader.js";
       var config = {
@@ -63,71 +212,49 @@
         productName: "CIEL Web Game",
         productVersion: "1.0.0",
         showBanner: unityShowBanner,
-        // errorHandler: function(err, url, line) {
-        //    alert("error " + err + " occurred at line " + line);
-        //    // Return 'true' if you handled this error and don't want Unity
-        //    // to process it further, 'false' otherwise.
-        //    return true;
-        // },
       };
 
-      // By default, Unity keeps WebGL canvas render target size matched with
-      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
-      // Set this to false if you want to decouple this synchronization from
-      // happening inside the engine, and you would instead like to size up
-      // the canvas DOM size and WebGL render target sizes yourself.
-      // config.matchWebGLToCanvasSize = false;
-
-      // If you would like all file writes inside Unity Application.persistentDataPath
-      // directory to automatically persist so that the contents are remembered when
-      // the user revisits the site the next time, uncomment the following line:
-      // config.autoSyncPersistentDataPath = true;
-      // This autosyncing is currently not the default behavior to avoid regressing
-      // existing user projects that might rely on the earlier manual
-      // JS_FileSystem_Sync() behavior, but in future Unity version, this will be
-      // expected to change.
-
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
-
         var meta = document.createElement('meta');
         meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes, viewport-fit=cover';
         document.getElementsByTagName('head')[0].appendChild(meta);
         document.querySelector("#unity-container").className = "unity-mobile";
+        document.body.className = "unity-mobile";
         canvas.className = "unity-mobile";
-
-        // To lower canvas resolution on mobile devices to gain some
-        // performance, uncomment the following line:
-        // config.devicePixelRatio = 1;
-
-
       } else {
-        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
         canvas.style.width = "600px";
         canvas.style.height = "960px";
       }
 
-      document.querySelector("#unity-loading-bar").style.display = "block";
+      document.querySelector("#unity-loading-bar").style.display = "flex";
 
       var script = document.createElement("script");
       script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
+      script.onload = function() {
+        createUnityInstance(canvas, config, function(progress) {
           document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
-              }).then((unityInstance) => {
-                document.querySelector("#unity-loading-bar").style.display = "none";
-                document.querySelector("#unity-fullscreen-button").onclick = () => {
-                  unityInstance.SetFullscreen(1);
-                };
+        }).then(function(unityInstance) {
+          window.unityInstance = unityInstance;
 
-              }).catch((message) => {
-                alert(message);
-              });
-            };
+          // Connect GameBridge with Unity instance
+          if (window.GameBridge) {
+            window.GameBridge.initUnityInstance(unityInstance);
+          }
+
+          document.querySelector("#unity-loading-bar").style.display = "none";
+          document.querySelector("#unity-fullscreen-button").onclick = function() {
+            unityInstance.SetFullscreen(1);
+          };
+          
+          checkDeviceOrientation();
+        }).catch(function(message) {
+          alert(message);
+        });
+      };
 
       document.body.appendChild(script);
-
     </script>
   </body>
 </html>
+

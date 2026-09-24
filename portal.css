@@ -479,7 +479,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 20px;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
@@ -494,6 +494,7 @@ header {
   width: 100%;
   max-width: 960px;
   height: 90vh;
+  max-height: 92vh;
   background: var(--bg-dark);
   border: 1px solid var(--border-glow);
   border-radius: var(--radius-xl);
@@ -501,59 +502,29 @@ header {
   display: flex;
   flex-direction: column;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 242, 254, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Portrait Game Modal (e.g. BusStop 9:16 mobile aspect) */
+.modal-container.portrait-mode {
+  max-width: min(calc((90vh - 60px) * 0.625), 520px);
+  height: 90vh;
+}
+
+/* Landscape Game Modal (16:9 wide aspect) */
+.modal-container.landscape-mode {
+  max-width: 960px;
+  height: min(90vh, 600px);
 }
 
 .modal-header {
-  padding: 14px 20px;
+  padding: 12px 20px;
   background: rgba(20, 27, 44, 0.95);
   border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.modal-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.modal-controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.btn-modal-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid var(--border-color);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-modal-icon:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.btn-modal-close {
-  background: rgba(255, 0, 122, 0.2);
-  border-color: rgba(255, 0, 122, 0.4);
-  color: var(--accent-pink);
-}
-
-.btn-modal-close:hover {
-  background: rgba(255, 0, 122, 0.4);
+  flex-shrink: 0;
 }
 
 .modal-body {
@@ -563,12 +534,14 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .modal-body iframe {
   width: 100%;
   height: 100%;
   border: none;
+  display: block;
 }
 
 /* Footer */

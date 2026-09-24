@@ -37,5 +37,18 @@
     "featured": false,
     "orientation": "portrait",
     "description": "Match and pop colorful bubbles in this relaxing and exciting puzzle adventure!"
+  },
+  {
+    "id": "store-simulation",
+    "title": "Store Convenience 3D",
+    "category": "Casual",
+    "branch": "StoreSimulation",
+    "path": "./StoreSimulation/",
+    "thumbnail": "./assets/store-simulation.jpg",
+    "rating": "4.9",
+    "plays": "22.1K",
+    "featured": false,
+    "orientation": "landscape",
+    "description": "Manage your 24/7 convenience store! Stock shelves, scan items, and serve happy customers in 3D!"
   }
 ]

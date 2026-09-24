@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Bubbel Shooter | CIEL WebGames</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+
+    <!-- ======================================================== -->
+    <!-- GOOGLE H5 GAMES ADS / AD PLACEMENT API SCRIPT            -->
+    <!-- Replace ca-pub-0000000000000000 with your real AdSense ID-->
+    <!-- ======================================================== -->
+    <script async
+      data-ad-client="ca-pub-0000000000000000"
+      data-ad-channel="0000000000"
+      data-ad-frequency-hint="30s"
+      data-adbreak-test="on"
+      crossorigin="anonymous"
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js">
+    </script>
+
+    <!-- Dedicated WebGL Communication & Ad Bridge Script -->
+    <script src="TemplateData/game-bridge.js"></script>
+  </head>
+  <body>
+    <!-- Unity Container -->
+    <div id="unity-container" class="unity-desktop">
+      <canvas id="unity-canvas" width="960" height="600" tabindex="-1"></canvas>
+      
+      <!-- Loading Screen -->
+      <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+        <div id="loading-text">Loading Game...</div>
+      </div>
+
+      <!-- Warnings / Errors -->
+      <div id="unity-warning"></div>
+
+      <!-- Footer Bar -->
+      <div id="unity-footer">
+        <div id="unity-build-title">
+          <span>🎮</span> Bubbel Shooter
+        </div>
+        <div id="unity-fullscreen-button" title="Toggle Fullscreen"></div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- INTERACTIVE AD MODAL (TEST & FALLBACK OVERLAY) -->
+    <!-- ============================================== -->
+    <div id="ad-modal-overlay">
+      <div class="ad-card">
+        <div class="ad-header">
+          <div class="ad-tag-badge" id="ad-type-badge">SPONSORED AD</div>
+          <div class="ad-placement-name" id="ad-placement-label">placement: default</div>
+        </div>
+
+        <div class="ad-content-box">
+          <div class="ad-preview-graphic" id="ad-icon">🎁</div>
+          <h2 class="ad-sponsor-title" id="ad-title">Awesome Partner Game</h2>
+          <p class="ad-sponsor-desc" id="ad-description">
+            Discover breathtaking 3D worlds, compete with players worldwide, and claim epic treasures today!
+          </p>
+          <div class="ad-timer-badge">
+            <span>Time Remaining:</span>
+            <span class="ad-timer-count" id="ad-countdown-sec">5s</span>
+          </div>
+        </div>
+
+        <div class="ad-actions">
+          <button class="ad-btn ad-btn-skip" id="ad-skip-btn" disabled>Wait 5s...</button>
+          <button class="ad-btn ad-btn-reward" id="ad-reward-btn">CLAIM REWARD</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MOBILE ORIENTATION WARNING OVERLAY             -->
+    <!-- ============================================== -->
+    <div id="orientation-overlay">
+      <div class="orientation-card">
+        <div class="phone-icon-wrapper">
+          <div id="phone-animation-icon" class="phone-rotate-icon to-portrait">
+            <div class="phone-device"></div>
+          </div>
+        </div>
+        <h2 class="orientation-title" id="orientation-title">Please Rotate Your Device</h2>
+        <p class="orientation-desc" id="orientation-desc">
+          This game is optimized for Portrait mode. Hold your phone vertically for the best gaming experience.
+        </p>
+        <button class="orientation-btn-bypass" onclick="dismissOrientationOverlay()">Play in Current Mode</button>
+      </div>
+    </div>
+
+    <!-- Unity 6 WebGL Runtime Loader -->
+    <script>
+      var canvas = document.querySelector("#unity-canvas");
+
+      // Mobile Device Orientation & Touch Handling
+      var orientationUserDismissed = false;
+
+      function dismissOrientationOverlay() {
+        orientationUserDismissed = true;
+        var overlay = document.getElementById("orientation-overlay");
+        if (overlay) overlay.style.display = "none";
+      }
+
+      function checkDeviceOrientation() {
+        var overlay = document.getElementById("orientation-overlay");
+        if (!overlay) return;
+
+        if (orientationUserDismissed) {
+          overlay.style.display = "none";
+          return;
+        }
+
+        var isMobile = /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                       (window.matchMedia && window.matchMedia("(max-width: 900px) and (pointer: coarse)").matches);
+
+        if (!isMobile) {
+          overlay.style.display = "none";
+          return;
+        }
+
+        // Target orientation from game config (default: Portrait)
+        var targetOrientation = "Portrait";
+        if (window.GameBridge && window.GameBridge.gameData && window.GameBridge.gameData.playerSettings && window.GameBridge.gameData.playerSettings.defaultWebScreenOrientation) {
+          targetOrientation = window.GameBridge.gameData.playerSettings.defaultWebScreenOrientation;
+        }
+
+        if (targetOrientation === "Any") {
+          overlay.style.display = "none";
+          return;
+        }
+
+        var width = window.innerWidth || document.documentElement.clientWidth;
+        var height = window.innerHeight || document.documentElement.clientHeight;
+        var isPortrait = height > width;
+
+        var titleElem = document.getElementById("orientation-title");
+        var descElem = document.getElementById("orientation-desc");
+        var phoneIcon = document.getElementById("phone-animation-icon");
+
+        if (targetOrientation === "Landscape" && isPortrait) {
+          if (titleElem) titleElem.innerText = "Please Rotate Your Device";
+          if (descElem) descElem.innerText = "This game is optimized for Landscape mode. Turn your phone sideways for the best gaming experience.";
+          if (phoneIcon) phoneIcon.className = "phone-rotate-icon to-landscape";
+          overlay.style.display = "flex";
+        } else if (targetOrientation === "Portrait" && !isPortrait) {
+          if (titleElem) titleElem.innerText = "Please Rotate Your Device";
+          if (descElem) descElem.innerText = "This game is optimized for Portrait mode. Hold your phone vertically for the best gaming experience.";
+          if (phoneIcon) phoneIcon.className = "phone-rotate-icon to-portrait";
+          overlay.style.display = "flex";
+        } else {
+          overlay.style.display = "none";
+        }
+      }
+
+      window.checkDeviceOrientation = checkDeviceOrientation;
+      window.addEventListener("resize", checkDeviceOrientation);
+      window.addEventListener("orientationchange", checkDeviceOrientation);
+      document.addEventListener("DOMContentLoaded", checkDeviceOrientation);
+
+      // Prevent default page scroll on mobile touch
+      document.addEventListener('touchmove', function(e) {
+        if (e.target === canvas || e.target.id === 'unity-container') {
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      // Banner message helper
+      function unityShowBanner(msg, type) {
+        var warningBanner = document.querySelector("#unity-warning");
+        function updateBannerVisibility() {
+          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        }
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: #e53935; color: white; padding: 12px; font-weight: bold;';
+        else {
+          if (type == 'warning') div.style = 'background: #fbc02d; color: #111; padding: 12px; font-weight: 500;';
+          setTimeout(function() {
+            warningBanner.removeChild(div);
+            updateBannerVisibility();
+          }, 5000);
+        }
+        updateBannerVisibility();
+      }
+
+      // Configuration
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/WebGamesCatalouge-Builds.loader.js";
+      var config = {
+        arguments: [],
+        dataUrl: buildUrl + "/WebGamesCatalouge-Builds.data.br",
+        frameworkUrl: buildUrl + "/WebGamesCatalouge-Builds.framework.js.br",
+        codeUrl: buildUrl + "/WebGamesCatalouge-Builds.wasm.br",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "CIEL Tech",
+        productName: "Bubbel Shooter",
+        productVersion: "1.0.0",
+        showBanner: unityShowBanner,
+      };
+
+      // Responsive Canvas Auto-Fit (Aspect Ratio Preserving)
+      var targetWidth = parseInt("960") || 600;
+      var targetHeight = parseInt("600") || 960;
+      
+      function resizeCanvas() {
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) return;
+        var footer = document.querySelector("#unity-footer");
+        var footerHeight = (footer && footer.offsetHeight) ? footer.offsetHeight + 12 : 0;
+        var availableW = window.innerWidth;
+        var availableH = window.innerHeight - footerHeight;
+        
+        var targetAspect = targetWidth / targetHeight;
+        var availableAspect = availableW / availableH;
+        
+        if (availableAspect < targetAspect) {
+          canvas.style.width = availableW + "px";
+          canvas.style.height = Math.floor(availableW / targetAspect) + "px";
+        } else {
+          canvas.style.height = availableH + "px";
+          canvas.style.width = Math.floor(availableH * targetAspect) + "px";
+        }
+      }
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes, viewport-fit=cover';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        document.querySelector("#unity-container").className = "unity-mobile";
+        document.body.className = "unity-mobile";
+        canvas.className = "unity-mobile";
+      } else {
+        resizeCanvas();
+        window.addEventListener("resize", resizeCanvas);
+      }
+
+      document.querySelector("#unity-loading-bar").style.display = "flex";
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = function() {
+        createUnityInstance(canvas, config, function(progress) {
+          document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
+        }).then(function(unityInstance) {
+          window.unityInstance = unityInstance;
+
+          // Connect GameBridge with Unity instance
+          if (window.GameBridge) {
+            window.GameBridge.initUnityInstance(unityInstance);
+          }
+
+          document.querySelector("#unity-loading-bar").style.display = "none";
+          document.querySelector("#unity-fullscreen-button").onclick = function() {
+            unityInstance.SetFullscreen(1);
+          };
+          
+          checkDeviceOrientation();
+        }).catch(function(message) {
+          alert(message);
+        });
+      };
+
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>
+

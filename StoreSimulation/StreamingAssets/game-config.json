@@ -1,0 +1,42 @@
+{
+    "gameId": "ciel-minigame-template",
+    "productName": "CIEL-WebGames",
+    "companyName": "DefaultCompany",
+    "version": "0.1.0",
+    "bundleVersion": "1",
+    "description": "High-performance WebGL mini-game template with Google Ads, responsive layout, and two-way browser communication.",
+    "category": "Arcade",
+    "tags": [
+        "webgl",
+        "html5",
+        "unity",
+        "arcade",
+        "casual"
+    ],
+    "icon": "Assets/Icons/app-icon.png",
+    "screenshots": [
+        "Assets/Screenshots/screenshot1.png",
+        "Assets/Screenshots/screenshot2.png"
+    ],
+    "playerSettings": {
+        "defaultScreenWidth": 960,
+        "defaultScreenHeight": 600,
+        "runInBackground": false,
+        "webGLTemplate": "PROJECT:AdSupportedTemplate",
+        "webGLCompressionFormat": 0,
+        "defaultWebScreenOrientation": "Landscape"
+    },
+    "adsConfig": {
+        "testMode": true,
+        "publisherId": "ca-pub-0000000000000000",
+        "adFrequencyHint": "30s",
+        "interstitialDuration": 4,
+        "rewardedDuration": 5
+    },
+    "portalMetadata": {
+        "developer": "CIEL Tech",
+        "releaseDate": "2026-09-15",
+        "rating": "Everyone",
+        "controls": "Desktop: Keyboard / Mouse. Mobile: Touch."
+    }
+}

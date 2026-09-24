@@ -24,5 +24,18 @@
     "featured": false,
     "orientation": "portrait",
     "description": "Un-gridlock the highway! Strategic vehicle puzzle action."
+  },
+  {
+    "id": "bubble-shooter",
+    "title": "Bubble Shooter 3D",
+    "category": "Casual",
+    "branch": "BubbelShooter",
+    "path": "./BubbelShooter/",
+    "thumbnail": "./assets/bubble-shooter.jpg",
+    "rating": "4.9",
+    "plays": "18.5K",
+    "featured": false,
+    "orientation": "portrait",
+    "description": "Match and pop colorful bubbles in this relaxing and exciting puzzle adventure!"
   }
 ]

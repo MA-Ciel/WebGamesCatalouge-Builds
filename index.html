@@ -126,8 +126,8 @@
           return;
         }
 
-        // Target orientation from game config (default: Portrait)
-        var targetOrientation = "Portrait";
+        // Target orientation from game config (default: Landscape)
+        var targetOrientation = "Landscape";
         if (window.GameBridge && window.GameBridge.gameData && window.GameBridge.gameData.playerSettings && window.GameBridge.gameData.playerSettings.defaultWebScreenOrientation) {
           targetOrientation = window.GameBridge.gameData.playerSettings.defaultWebScreenOrientation;
         }
@@ -197,15 +197,38 @@
       var loaderUrl = buildUrl + "/WebGamesCatalouge-Builds.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/WebGamesCatalouge-Builds.data.br",
-        frameworkUrl: buildUrl + "/WebGamesCatalouge-Builds.framework.js.br",
-        codeUrl: buildUrl + "/WebGamesCatalouge-Builds.wasm.br",
+        dataUrl: buildUrl + "/WebGamesCatalouge-Builds.data",
+        frameworkUrl: buildUrl + "/WebGamesCatalouge-Builds.framework.js",
+        codeUrl: buildUrl + "/WebGamesCatalouge-Builds.wasm",
         streamingAssetsUrl: "StreamingAssets",
-        companyName: "DefaultCompany",
-        productName: "CIEL-WebGames",
-        productVersion: "0.1.0",
+        companyName: "CIEL Tech",
+        productName: "Store Simulation",
+        productVersion: "1.0.0",
         showBanner: unityShowBanner,
       };
+
+      // Responsive Canvas Auto-Fit (Aspect Ratio Preserving)
+      var targetWidth = parseInt("960") || 960;
+      var targetHeight = parseInt("600") || 600;
+      
+      function resizeCanvas() {
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) return;
+        var footer = document.querySelector("#unity-footer");
+        var footerHeight = (footer && footer.offsetHeight) ? footer.offsetHeight + 12 : 0;
+        var availableW = window.innerWidth;
+        var availableH = window.innerHeight - footerHeight;
+        
+        var targetAspect = targetWidth / targetHeight;
+        var availableAspect = availableW / availableH;
+        
+        if (availableAspect < targetAspect) {
+          canvas.style.width = availableW + "px";
+          canvas.style.height = Math.floor(availableW / targetAspect) + "px";
+        } else {
+          canvas.style.height = availableH + "px";
+          canvas.style.width = Math.floor(availableH * targetAspect) + "px";
+        }
+      }
 
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         var meta = document.createElement('meta');
@@ -216,8 +239,8 @@
         document.body.className = "unity-mobile";
         canvas.className = "unity-mobile";
       } else {
-        canvas.style.width = "960px";
-        canvas.style.height = "600px";
+        resizeCanvas();
+        window.addEventListener("resize", resizeCanvas);
       }
 
       document.querySelector("#unity-loading-bar").style.display = "flex";

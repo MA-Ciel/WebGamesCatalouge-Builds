@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>CIEL Web Game | CIEL WebGames</title>
+    <title>Traffic Jam | CIEL WebGames</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
 
@@ -24,13 +24,6 @@
     <script src="TemplateData/game-bridge.js"></script>
   </head>
   <body>
-    <!-- Floating Web Developer Toolbar for testing ad events from browser -->
-    <div id="ad-dev-toolbar">
-      <span class="dev-badge">Ads Testbed</span>
-      <button class="dev-btn" onclick="window.GameBridge.showInterstitial('dev_test_break')">Test Interstitial</button>
-      <button class="dev-btn" onclick="window.GameBridge.showRewarded('dev_test_reward')">Test Rewarded</button>
-    </div>
-
     <!-- Unity Container -->
     <div id="unity-container" class="unity-desktop">
       <canvas id="unity-canvas" width="600" height="960" tabindex="-1"></canvas>
@@ -50,7 +43,7 @@
       <!-- Footer Bar -->
       <div id="unity-footer">
         <div id="unity-build-title">
-          <span>🎮</span> CIEL Web Game
+          <span>🎮</span> Traffic Jam
         </div>
         <div id="unity-fullscreen-button" title="Toggle Fullscreen"></div>
       </div>
@@ -201,15 +194,15 @@
 
       // Configuration
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/WebGL.loader.js";
+      var loaderUrl = buildUrl + "/WebGamesCatalouge-Builds.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/WebGL.data.unityweb",
-        frameworkUrl: buildUrl + "/WebGL.framework.js.unityweb",
-        codeUrl: buildUrl + "/WebGL.wasm.unityweb",
+        dataUrl: buildUrl + "/WebGamesCatalouge-Builds.data.unityweb",
+        frameworkUrl: buildUrl + "/WebGamesCatalouge-Builds.framework.js.unityweb",
+        codeUrl: buildUrl + "/WebGamesCatalouge-Builds.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "CIEL Tech",
-        productName: "CIEL Web Game",
+        productName: "Traffic Jam",
         productVersion: "1.0.0",
         showBanner: unityShowBanner,
       };

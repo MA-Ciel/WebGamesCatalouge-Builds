@@ -367,46 +367,6 @@ html, body {
   box-shadow: 0 8px 25px rgba(0, 230, 118, 0.5);
 }
 
-/* Floating Web Developer Ad Tester Widget */
-#ad-dev-toolbar {
-  position: fixed;
-  top: 15px;
-  right: 15px;
-  z-index: 1000;
-  background: rgba(22, 25, 38, 0.85);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
-  padding: 10px 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-}
-
-.dev-badge {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--accent-gold);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.dev-btn {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 6px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.dev-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
 /* ========================================= */
 /* MOBILE TOUCH & ORIENTATION OVERLAY SYSTEM */
 /* ========================================= */

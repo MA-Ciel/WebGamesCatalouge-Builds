@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
             PLAY NOW
           </a>
-          <button class="btn-play-secondary" onclick="openModal('${game.title}', '${game.path}')">
+          <button class="btn-play-secondary" onclick="openModal('${game.title}', '${game.path}', '${game.orientation || 'portrait'}')">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
             Play in Portal
           </button>
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <p class="card-desc">${game.description}</p>
           <div class="card-actions">
             <a href="${game.path}" class="btn-card-launch">Play Game</a>
-            <button class="btn-card-popup" title="Play in popup modal" onclick="openModal('${game.title}', '${game.path}')">
+            <button class="btn-card-popup" title="Play in popup modal" onclick="openModal('${game.title}', '${game.path}', '${game.orientation || 'portrait'}')">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
             </button>
           </div>
@@ -123,11 +123,22 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Modal Handling
-  window.openModal = function(title, path) {
+  window.openModal = function(title, path, orientation = 'portrait') {
     if (!gameModal || !modalIframe) return;
     modalTitle.textContent = title;
     modalIframe.src = path;
     if (modalExternalBtn) modalExternalBtn.href = path;
+
+    const modalContainer = gameModal.querySelector('.modal-container');
+    if (modalContainer) {
+      modalContainer.classList.remove('portrait-mode', 'landscape-mode');
+      if (orientation === 'portrait') {
+        modalContainer.classList.add('portrait-mode');
+      } else {
+        modalContainer.classList.add('landscape-mode');
+      }
+    }
+
     gameModal.classList.add('active');
     document.body.style.overflow = 'hidden';
   };

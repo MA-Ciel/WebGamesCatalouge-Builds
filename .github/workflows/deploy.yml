@@ -1,0 +1,25 @@
+name: Deploy Branch to GitHub Pages Subfolder
+
+on:
+  push:
+    branches:
+      - '*'
+      - '!gh-pages'
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to gh-pages subfolder
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: .
+          target-folder: ${{ github.ref_name }}
+          branch: gh-pages
+          clean: false

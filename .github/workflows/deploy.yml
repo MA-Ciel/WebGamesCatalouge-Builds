@@ -1,0 +1,35 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - '*'
+      - '!gh-pages'
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy Main Catalog (Root)
+        if: github.ref_name == 'main'
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: .
+          target-folder: .
+          branch: gh-pages
+          clean: false
+
+      - name: Deploy Game Subfolder
+        if: github.ref_name != 'main'
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: .
+          target-folder: ${{ github.ref_name }}
+          branch: gh-pages
+          clean: false

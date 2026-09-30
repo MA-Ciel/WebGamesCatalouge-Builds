@@ -40,9 +40,27 @@ In Unity:
 1. Go to **File ➔ Build Settings...**
 2. Switch platform to **WebGL**.
 3. Open **Player Settings ➔ Publishing Settings**:
-   - **Compression Format**: Choose **Brotli** or **Gzip** (Keeps file sizes well below GitHub's 100MB limit).
-   - **Decompression Fallback**: Checked.
-4. Click **Build** and choose an export folder on your computer.
+   - **Compression Format**: **Disabled**.
+   - **Decompression Fallback**: Unchecked.
+   - **Data Caching**: Checked (repeat visits load from the browser cache).
+
+   > **Why Disabled?** GitHub Pages cannot send the `Content-Encoding` header that
+   > Unity's `.br` / `.gz` files need, so Unity has to unzip them in JavaScript,
+   > which is slow (especially on phones). Uncompressed files are gzipped by GitHub
+   > Pages automatically and unzipped natively by the browser, and the `.wasm`
+   > compiles while it downloads.
+   >
+   > Every file must stay under GitHub's **100MB** limit. If `.data` goes over,
+   > shrink the build (see below).
+4. Open **Player Settings ➔ Other Settings** to make the build smaller:
+   - **Managed Stripping Level**: **High** (test the game afterwards).
+   - **IL2CPP Code Generation**: **Optimize for code size and build time**.
+   - **Strip Engine Code**: Checked.
+5. In **Build Profiles ➔ WebGL**, set **Code Optimization** to **Disk Size with LTO**.
+6. Keep assets small: texture **Max Size** 1024 (512 for UI/small props) with
+   **Crunch Compression**, audio as **Vorbis** at a lower quality, and remove
+   unused scenes/assets from the build.
+7. Click **Build** and choose an export folder on your computer.
 
 ---
 
@@ -58,10 +76,10 @@ git checkout -b CandyMatch
 # 2. Copy the exported Unity build files into this repository root:
 # Your repository root must contain:
 #   ├── Build/
-#   │   ├── WebGL.data.br (or .unityweb)
-#   │   ├── WebGL.framework.js.br
+#   │   ├── WebGL.data
+#   │   ├── WebGL.framework.js
 #   │   ├── WebGL.loader.js
-#   │   └── WebGL.wasm.br
+#   │   └── WebGL.wasm
 #   ├── TemplateData/
 #   ├── index.html
 #   └── game-config.json
@@ -139,6 +157,7 @@ Once the game is deployed, register it in the catalog:
 |---|---|---|
 | **Game shows 404** | Wrong URL path (e.g. `Game/Game/`) | Use `https://ma-ciel.github.io/WebGamesCatalouge-Builds/<BranchName>/` |
 | **Build files missing on GitHub** | Ignored by `.gitignore` | `.gitignore` has been updated to allow `Build/`. You can also run `git add -f Build/` |
-| **Push rejected (file > 100MB)** | Uncompressed WebGL data | Set Unity Compression to **Brotli** or **Gzip** in Player Settings. |
+| **Push rejected (file > 100MB)** | Build too large | Shrink textures/audio (Step 1). As a last resort use **Brotli** with **Decompression Fallback** checked — it loads slower. |
+| **Game loads slowly** | Compressed `.br`/`.gz`/`.unityweb` build on GitHub Pages | Rebuild with **Compression Format: Disabled** (Step 1). |
 | **New game card not appearing on portal** | Browser cache | Hard refresh with `Ctrl + Shift + R` (or `Cmd + Shift + R`). `portal.js` also now has automated cache-busting. |
 | **Black screen / Loading error** | Missing `.nojekyll` | Ensure `.nojekyll` exists on `gh-pages` so GitHub doesn't ignore underscore/dot files. |

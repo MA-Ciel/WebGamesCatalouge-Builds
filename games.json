@@ -63,5 +63,18 @@
     "featured": false,
     "orientation": "landscape",
     "description": "High-speed neon highway racing! Dodge traffic, drift through sharp turns, and push your limits!"
+  },
+  {
+    "id": "popit-game",
+    "title": "Pop It 3D",
+    "category": "Casual",
+    "branch": "PopItGame",
+    "path": "./PopItGame/",
+    "thumbnail": "./assets/popit-game.jpg",
+    "rating": "4.7",
+    "plays": "8.6K",
+    "featured": false,
+    "orientation": "portrait",
+    "description": "Pop colorful fidget bubbles in this satisfying and relaxing ASMR toy experience!"
   }
 ]

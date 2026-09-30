@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let currentActiveCategory = 'all';
 
-  // Fetch games configuration
-  fetch('./games.json')
+  // Fetch games configuration (with cache-busting so new games show immediately)
+  fetch('./games.json?t=' + Date.now())
     .then(res => res.json())
     .then(data => {
       allGames = data;

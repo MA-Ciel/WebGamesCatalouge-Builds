@@ -8,7 +8,7 @@
     "thumbnail": "./assets/bus-stop.jpg",
     "rating": "4.9",
     "plays": "14.2K",
-    "featured": false,
+    "featured": true,
     "orientation": "portrait",
     "description": "Sort passengers into color-coded buses in this addictive, fast-paced puzzle arcade game!"
   },
@@ -66,15 +66,28 @@
   },
   {
     "id": "popit-game",
-    "title": "Pop It 3D",
+    "title": "Pop It ",
     "category": "Casual",
     "branch": "PopItGame",
     "path": "./PopItGame/",
     "thumbnail": "./assets/popit-game.jpg",
     "rating": "4.7",
     "plays": "8.6K",
-    "featured": true,
+    "featured": false,
     "orientation": "portrait",
     "description": "Pop colorful fidget bubbles in this satisfying and relaxing ASMR toy experience!"
+  },
+  {
+    "id": "SimulationGame",
+    "title": "House Simulation Game ",
+    "category": "Simulation",
+    "branch": "Simulation-Game",
+    "path": "./Simulation-Game/",
+    "thumbnail": "./assets/p-game.jpg",
+    "rating": "4.7",
+    "plays": "8.6K",
+    "featured": false,
+    "orientation": "landscape",
+    "description": "Experience the ultimate dream house building adventure! Design, decorate, and bring your perfect home to life."
   }
 ]

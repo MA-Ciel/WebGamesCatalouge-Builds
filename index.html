@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Car Racing | CIEL WebGames</title>
+    <title>Pop it | CIEL WebGames</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
 
@@ -26,7 +26,7 @@
   <body>
     <!-- Unity Container -->
     <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width="960" height="600" tabindex="-1"></canvas>
+      <canvas id="unity-canvas" width="600" height="960" tabindex="-1"></canvas>
       
       <!-- Loading Screen -->
       <div id="unity-loading-bar">
@@ -43,7 +43,7 @@
       <!-- Footer Bar -->
       <div id="unity-footer">
         <div id="unity-build-title">
-          <span>🎮</span> Car Racing
+          <span>🎮</span> Pop it
         </div>
         <div id="unity-fullscreen-button" title="Toggle Fullscreen"></div>
       </div>
@@ -194,16 +194,16 @@
 
       // Configuration
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/WebGL.loader.js";
+      var loaderUrl = buildUrl + "/WebGamesCatalouge-Builds.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/WebGL.data.br",
-        frameworkUrl: buildUrl + "/WebGL.framework.js.br",
-        codeUrl: buildUrl + "/WebGL.wasm.br",
+        dataUrl: buildUrl + "/WebGamesCatalouge-Builds.data.unityweb",
+        frameworkUrl: buildUrl + "/WebGamesCatalouge-Builds.framework.js.unityweb",
+        codeUrl: buildUrl + "/WebGamesCatalouge-Builds.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
-        companyName: "CIEL Web Game",
-        productName: "Car Racing",
-        productVersion: "1.0.0",
+        companyName: "CIEL Tech",
+        productName: "Pop it",
+        productVersion: "0.1.0",
         showBanner: unityShowBanner,
       };
 
@@ -216,8 +216,8 @@
         document.body.className = "unity-mobile";
         canvas.className = "unity-mobile";
       } else {
-        canvas.style.width = "960px";
-        canvas.style.height = "600px";
+        canvas.style.width = "600px";
+        canvas.style.height = "960px";
       }
 
       document.querySelector("#unity-loading-bar").style.display = "flex";

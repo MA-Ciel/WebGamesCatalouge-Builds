@@ -89,5 +89,18 @@
     "featured": false,
     "orientation": "landscape",
     "description": "Experience the ultimate dream house building adventure! Design, decorate, and bring your perfect home to life."
+  },
+  {
+    "id": "maze-rotator",
+    "title": "Maze Rotator",
+    "category": "Puzzle",
+    "branch": "RazeRotator",
+    "path": "./RazeRotator/",
+    "thumbnail": "./assets/maze-rotator.svg",
+    "rating": "4.8",
+    "plays": "1.2K",
+    "featured": false,
+    "orientation": "portrait",
+    "description": "Rotate the maze and guide the ball to the exit in this brain-teasing 3D puzzle!"
   }
 ]

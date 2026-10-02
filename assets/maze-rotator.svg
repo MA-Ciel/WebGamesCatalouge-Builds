@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1b1446"/>
+      <stop offset="1" stop-color="#3a1c71"/>
+    </linearGradient>
+    <radialGradient id="ball" cx="0.35" cy="0.35" r="0.7">
+      <stop offset="0" stop-color="#fff6c2"/>
+      <stop offset="1" stop-color="#ffb300"/>
+    </radialGradient>
+  </defs>
+  <rect width="960" height="540" fill="url(#bg)"/>
+  <g transform="translate(700 270) rotate(18)" fill="none" stroke="#7fe3ff" stroke-width="14" stroke-linecap="round">
+    <rect x="-190" y="-190" width="380" height="380" rx="24" stroke="#b58cff"/>
+    <path d="M-190 -95 H40 M-95 -95 V40 M-95 40 H95 M95 -190 V-40 M0 95 V190 M95 95 H190 M-190 95 H-100"/>
+  </g>
+  <circle cx="662" cy="300" r="26" fill="url(#ball)"/>
+  <text x="70" y="250" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="78" font-weight="800">MAZE</text>
+  <text x="70" y="335" fill="#7fe3ff" font-family="Arial, Helvetica, sans-serif" font-size="78" font-weight="800">ROTATOR</text>
+  <text x="72" y="390" fill="#cfc4ff" font-family="Arial, Helvetica, sans-serif" font-size="28">Rotate the maze. Guide the ball.</text>
+</svg>

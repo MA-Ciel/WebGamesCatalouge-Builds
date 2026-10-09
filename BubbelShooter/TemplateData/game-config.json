@@ -1,8 +1,8 @@
 {
     "gameId": "ciel-minigame-template",
-    "productName": "Bubbel Shooter",
+    "productName": "Pop it",
     "companyName": "CIEL Tech",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "bundleVersion": "1",
     "description": "High-performance WebGL mini-game template with Google Ads, responsive layout, and two-way browser communication.",
     "category": "Arcade",
@@ -13,7 +13,7 @@
         "arcade",
         "casual"
     ],
-    "icon": "Assets/__game/Icons/app-icon.png",
+    "icon": "Assets/PopIt/Textures/UI/Icon.png",
     "screenshots": [
         "Assets/Screenshots/screenshot1.png",
         "Assets/Screenshots/screenshot2.png"

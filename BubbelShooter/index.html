@@ -207,29 +207,6 @@
         showBanner: unityShowBanner,
       };
 
-      // Responsive Canvas Auto-Fit (Aspect Ratio Preserving)
-      var targetWidth = parseInt("600") || 600;
-      var targetHeight = parseInt("960") || 960;
-      
-      function resizeCanvas() {
-        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) return;
-        var footer = document.querySelector("#unity-footer");
-        var footerHeight = (footer && footer.offsetHeight) ? footer.offsetHeight + 12 : 0;
-        var availableW = window.innerWidth;
-        var availableH = window.innerHeight - footerHeight;
-        
-        var targetAspect = targetWidth / targetHeight;
-        var availableAspect = availableW / availableH;
-        
-        if (availableAspect < targetAspect) {
-          canvas.style.width = availableW + "px";
-          canvas.style.height = Math.floor(availableW / targetAspect) + "px";
-        } else {
-          canvas.style.height = availableH + "px";
-          canvas.style.width = Math.floor(availableH * targetAspect) + "px";
-        }
-      }
-
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         var meta = document.createElement('meta');
         meta.name = 'viewport';
@@ -239,8 +216,8 @@
         document.body.className = "unity-mobile";
         canvas.className = "unity-mobile";
       } else {
-        resizeCanvas();
-        window.addEventListener("resize", resizeCanvas);
+        canvas.style.width = "600px";
+        canvas.style.height = "960px";
       }
 
       document.querySelector("#unity-loading-bar").style.display = "flex";

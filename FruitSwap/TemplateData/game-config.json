@@ -1,19 +1,20 @@
 {
     "gameId": "ciel-minigame-template",
-    "productName": "Pop it",
-    "companyName": "CIEL Tech",
+    "productName": "Fruit Swap Match",
+    "companyName": "DefaultCompany",
     "version": "0.1.0",
     "bundleVersion": "1",
     "description": "High-performance WebGL mini-game template with Google Ads, responsive layout, and two-way browser communication.",
-    "category": "Arcade",
+    "category": "Puzzel",
+    "portalUrl": "",
     "tags": [
         "webgl",
         "html5",
         "unity",
-        "arcade",
+        "Puzzel",
         "casual"
     ],
-    "icon": "Assets/PopIt/Textures/UI/Icon.png",
+    "icon": "Assets/Icons/app-icon.png",
     "screenshots": [
         "Assets/Screenshots/screenshot1.png",
         "Assets/Screenshots/screenshot2.png"
@@ -24,7 +25,7 @@
         "runInBackground": true,
         "webGLTemplate": "PROJECT:AdSupportedTemplate",
         "webGLCompressionFormat": 0,
-        "defaultWebScreenOrientation": "Landscape"
+        "defaultWebScreenOrientation": "Portrait"
     },
     "adsConfig": {
         "testMode": true,

@@ -1,18 +1,18 @@
 {
-    "gameId": "maze-rotator",
-    "productName": "Maze Rotator",
-    "companyName": "CIEL Tech",
-    "version": "1.0.0",
+    "gameId": "ciel-minigame-template",
+    "productName": "Fruit Swap Match",
+    "companyName": "DefaultCompany",
+    "version": "0.1.0",
     "bundleVersion": "1",
-    "description": "Rotate the maze and guide the balls to collect coins and finish levels in this exciting WebGL puzzle arcade game with Google Ads integration.",
-    "category": "Puzzle",
+    "description": "High-performance WebGL mini-game template with Google Ads, responsive layout, and two-way browser communication.",
+    "category": "Puzzel",
+    "portalUrl": "",
     "tags": [
         "webgl",
         "html5",
         "unity",
         "arcade",
-        "puzzle",
-        "maze"
+        "casual"
     ],
     "icon": "Assets/Icons/app-icon.png",
     "screenshots": [
@@ -24,8 +24,8 @@
         "defaultScreenHeight": 960,
         "runInBackground": true,
         "webGLTemplate": "PROJECT:AdSupportedTemplate",
-        "webGLCompressionFormat": 1,
-        "defaultWebScreenOrientation": "Landscape"
+        "webGLCompressionFormat": 0,
+        "defaultWebScreenOrientation": "Portrait"
     },
     "adsConfig": {
         "testMode": true,
@@ -36,8 +36,8 @@
     },
     "portalMetadata": {
         "developer": "CIEL Tech",
-        "releaseDate": "2026-09-30",
+        "releaseDate": "2026-09-15",
         "rating": "Everyone",
-        "controls": "Desktop: Mouse / Arrow keys. Mobile: Touch."
+        "controls": "Desktop: Keyboard / Mouse. Mobile: Touch."
     }
 }

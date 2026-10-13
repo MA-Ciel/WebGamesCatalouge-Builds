@@ -1,0 +1,4 @@
+# Ensure Git tracks the WebGL Build output folder for GitHub Pages hosting
+!Build/
+!Build/*
+!Build/**

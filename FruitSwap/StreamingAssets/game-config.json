@@ -1,0 +1,43 @@
+{
+    "gameId": "maze-rotator",
+    "productName": "Maze Rotator",
+    "companyName": "CIEL Tech",
+    "version": "1.0.0",
+    "bundleVersion": "1",
+    "description": "Rotate the maze and guide the balls to collect coins and finish levels in this exciting WebGL puzzle arcade game with Google Ads integration.",
+    "category": "Puzzle",
+    "tags": [
+        "webgl",
+        "html5",
+        "unity",
+        "arcade",
+        "puzzle",
+        "maze"
+    ],
+    "icon": "Assets/Icons/app-icon.png",
+    "screenshots": [
+        "Assets/Screenshots/screenshot1.png",
+        "Assets/Screenshots/screenshot2.png"
+    ],
+    "playerSettings": {
+        "defaultScreenWidth": 600,
+        "defaultScreenHeight": 960,
+        "runInBackground": true,
+        "webGLTemplate": "PROJECT:AdSupportedTemplate",
+        "webGLCompressionFormat": 1,
+        "defaultWebScreenOrientation": "Landscape"
+    },
+    "adsConfig": {
+        "testMode": true,
+        "publisherId": "ca-pub-0000000000000000",
+        "adFrequencyHint": "30s",
+        "interstitialDuration": 4,
+        "rewardedDuration": 5
+    },
+    "portalMetadata": {
+        "developer": "CIEL Tech",
+        "releaseDate": "2026-09-30",
+        "rating": "Everyone",
+        "controls": "Desktop: Mouse / Arrow keys. Mobile: Touch."
+    }
+}

@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes, viewport-fit=cover">
     <title>Traffic Jam | CIEL WebGames</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
@@ -100,6 +101,86 @@
     <script>
       var canvas = document.querySelector("#unity-canvas");
 
+      // Dynamic Target Aspect Ratio from canvas attributes or default
+      var targetWidth = parseInt(canvas.getAttribute("width")) || 600;
+      var targetHeight = parseInt(canvas.getAttribute("height")) || 960;
+      var targetAspect = targetWidth / targetHeight;
+
+      // Detect mobile device
+      var isMobileDevice = /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                           (window.matchMedia && window.matchMedia("(max-width: 900px) and (pointer: coarse)").matches);
+
+      if (isMobileDevice) {
+        document.querySelector("#unity-container").className = "unity-mobile";
+        document.body.className = "unity-mobile";
+        canvas.className = "unity-mobile";
+      }
+
+      // Universal Responsive Resize Engine (No distortion, no cut off, full screen adaptation)
+      function resizeCanvas() {
+        var canvas = document.querySelector("#unity-canvas");
+        if (!canvas) return;
+
+        // Viewport dimensions (using visualViewport for precision on mobile browsers)
+        var winW = window.visualViewport ? window.visualViewport.width : window.innerWidth;
+        var winH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+
+        if (!winW || !winH) {
+          winW = document.documentElement.clientWidth;
+          winH = document.documentElement.clientHeight;
+        }
+
+        var isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+        var footer = document.querySelector("#unity-footer");
+        var reservedFooterH = 0;
+
+        // Reserve space for desktop footer bar if visible and not fullscreen
+        if (!isMobileDevice && !isFullscreen && footer && window.getComputedStyle(footer).display !== "none") {
+          reservedFooterH = (footer.offsetHeight || 44) + 14;
+        }
+
+        // Safe margins to ensure top and bottom UI buttons are never clipped
+        var safeMarginX = isFullscreen ? 0 : (isMobileDevice ? 0 : 24);
+        var safeMarginY = isFullscreen ? 0 : (isMobileDevice ? 0 : 20);
+
+        var availW = Math.max(winW - safeMarginX, 60);
+        var availH = Math.max(winH - reservedFooterH - safeMarginY, 60);
+
+        var currentAspect = availW / availH;
+        var renderW, renderH;
+
+        if (currentAspect > targetAspect) {
+          // Viewport is wider than target aspect ratio -> fit to height (pillarbox sides)
+          renderH = availH;
+          renderW = Math.floor(availH * targetAspect);
+        } else {
+          // Viewport is taller than target aspect ratio -> fit to width (letterbox top/bottom)
+          renderW = availW;
+          renderH = Math.floor(availW / targetAspect);
+        }
+
+        // Clamp to prevent any single pixel overflow
+        if (renderW > availW) {
+          renderW = availW;
+          renderH = Math.floor(renderW / targetAspect);
+        }
+        if (renderH > availH) {
+          renderH = availH;
+          renderW = Math.floor(renderH * targetAspect);
+        }
+
+        canvas.style.width = renderW + "px";
+        canvas.style.height = renderH + "px";
+
+        // Keep desktop footer width matched to game canvas width
+        if (footer && !isMobileDevice && !isFullscreen) {
+          footer.style.width = renderW + "px";
+        }
+      }
+
+      // Run initial size calculation immediately
+      resizeCanvas();
+
       // Mobile Device Orientation & Touch Handling
       var orientationUserDismissed = false;
 
@@ -107,6 +188,7 @@
         orientationUserDismissed = true;
         var overlay = document.getElementById("orientation-overlay");
         if (overlay) overlay.style.display = "none";
+        resizeCanvas();
       }
 
       function checkDeviceOrientation() {
@@ -118,16 +200,13 @@
           return;
         }
 
-        var isMobile = /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
-                       (window.matchMedia && window.matchMedia("(max-width: 900px) and (pointer: coarse)").matches);
-
-        if (!isMobile) {
+        if (!isMobileDevice) {
           overlay.style.display = "none";
           return;
         }
 
-        // Target orientation from game config (default: Portrait)
-        var targetOrientation = "Portrait";
+        // Target orientation from game config (default: Portrait if height >= width)
+        var targetOrientation = targetHeight >= targetWidth ? "Portrait" : "Landscape";
         if (window.GameBridge && window.GameBridge.gameData && window.GameBridge.gameData.playerSettings && window.GameBridge.gameData.playerSettings.defaultWebScreenOrientation) {
           targetOrientation = window.GameBridge.gameData.playerSettings.defaultWebScreenOrientation;
         }
@@ -161,9 +240,39 @@
       }
 
       window.checkDeviceOrientation = checkDeviceOrientation;
-      window.addEventListener("resize", checkDeviceOrientation);
-      window.addEventListener("orientationchange", checkDeviceOrientation);
-      document.addEventListener("DOMContentLoaded", checkDeviceOrientation);
+
+      // Event listeners for resize, rotation, visual viewport and fullscreen changes
+      window.addEventListener("resize", function() {
+        resizeCanvas();
+        checkDeviceOrientation();
+      });
+
+      window.addEventListener("orientationchange", function() {
+        setTimeout(function() {
+          resizeCanvas();
+          checkDeviceOrientation();
+        }, 150);
+        setTimeout(function() {
+          resizeCanvas();
+          checkDeviceOrientation();
+        }, 350);
+      });
+
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", resizeCanvas);
+      }
+
+      document.addEventListener("fullscreenchange", function() {
+        setTimeout(resizeCanvas, 100);
+      });
+      document.addEventListener("webkitfullscreenchange", function() {
+        setTimeout(resizeCanvas, 100);
+      });
+
+      document.addEventListener("DOMContentLoaded", function() {
+        resizeCanvas();
+        checkDeviceOrientation();
+      });
 
       // Prevent default page scroll on mobile touch
       document.addEventListener('touchmove', function(e) {
@@ -171,6 +280,31 @@
           e.preventDefault();
         }
       }, { passive: false });
+
+      // Fullscreen Toggle Handler (Works reliably across all browsers)
+      function toggleFullscreen() {
+        var container = document.querySelector("#unity-container");
+        if (!container) return;
+
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          if (container.requestFullscreen) {
+            container.requestFullscreen().catch(function() {
+              if (window.unityInstance) window.unityInstance.SetFullscreen(1);
+            });
+          } else if (container.webkitRequestFullscreen) {
+            container.webkitRequestFullscreen();
+          } else if (window.unityInstance) {
+            window.unityInstance.SetFullscreen(1);
+          }
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          }
+        }
+        setTimeout(resizeCanvas, 150);
+      }
 
       // Banner message helper
       function unityShowBanner(msg, type) {
@@ -207,19 +341,6 @@
         showBanner: unityShowBanner,
       };
 
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes, viewport-fit=cover';
-        document.getElementsByTagName('head')[0].appendChild(meta);
-        document.querySelector("#unity-container").className = "unity-mobile";
-        document.body.className = "unity-mobile";
-        canvas.className = "unity-mobile";
-      } else {
-        canvas.style.width = "600px";
-        canvas.style.height = "960px";
-      }
-
       document.querySelector("#unity-loading-bar").style.display = "flex";
 
       var script = document.createElement("script");
@@ -236,10 +357,9 @@
           }
 
           document.querySelector("#unity-loading-bar").style.display = "none";
-          document.querySelector("#unity-fullscreen-button").onclick = function() {
-            unityInstance.SetFullscreen(1);
-          };
+          document.querySelector("#unity-fullscreen-button").onclick = toggleFullscreen;
           
+          resizeCanvas();
           checkDeviceOrientation();
         }).catch(function(message) {
           alert(message);

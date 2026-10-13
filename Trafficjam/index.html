@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes, viewport-fit=cover">
     <title>Traffic Jam | CIEL WebGames</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
+    <link rel="stylesheet" href="TemplateData/style.css?v=3">
 
     <!-- ======================================================== -->
     <!-- GOOGLE H5 GAMES ADS / AD PLACEMENT API SCRIPT            -->
@@ -101,10 +101,15 @@
     <script>
       var canvas = document.querySelector("#unity-canvas");
 
-      // Dynamic Target Aspect Ratio from canvas attributes or default
-      var targetWidth = parseInt(canvas.getAttribute("width")) || 600;
-      var targetHeight = parseInt(canvas.getAttribute("height")) || 960;
-      var targetAspect = targetWidth / targetHeight;
+      // Aspect ratio:
+      // Mobile portrait games in Unity are built for 9:16 aspect ratio (0.5625).
+      // Unity's default template placeholder is 600x960 (0.625 = 10:16), which squashes the vertical height
+      // and causes top UI buttons ("LEVEL 1", cart, menu) and bottom exit buttons to clip outside the camera!
+      // Setting standard 9:16 (0.5625) provides proper vertical canvas space so NO UI buttons are cut off.
+      var rawW = parseInt(canvas.getAttribute("width")) || 600;
+      var rawH = parseInt(canvas.getAttribute("height")) || 960;
+      var isPortraitGame = rawH >= rawW;
+      var targetAspect = isPortraitGame ? (9 / 16) : (16 / 9);
 
       // Detect mobile device
       var isMobileDevice = /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
@@ -131,20 +136,15 @@
         }
 
         var isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
-        var footer = document.querySelector("#unity-footer");
-        var reservedFooterH = 0;
 
-        // Reserve space for desktop footer bar if visible and not fullscreen
-        if (!isMobileDevice && !isFullscreen && footer && window.getComputedStyle(footer).display !== "none") {
-          reservedFooterH = (footer.offsetHeight || 44) + 14;
-        }
+        // Safe margins:
+        // On desktop, reserve 70px vertical margin (35px top + 35px bottom for floating footer)
+        // so the canvas never touches the top browser bar or gets cut off.
+        var marginX = isFullscreen ? 0 : (isMobileDevice ? 0 : 32);
+        var marginY = isFullscreen ? 0 : (isMobileDevice ? 0 : 70);
 
-        // Safe margins to ensure top and bottom UI buttons are never clipped
-        var safeMarginX = isFullscreen ? 0 : (isMobileDevice ? 0 : 24);
-        var safeMarginY = isFullscreen ? 0 : (isMobileDevice ? 0 : 20);
-
-        var availW = Math.max(winW - safeMarginX, 60);
-        var availH = Math.max(winH - reservedFooterH - safeMarginY, 60);
+        var availW = Math.max(winW - marginX, 60);
+        var availH = Math.max(winH - marginY, 60);
 
         var currentAspect = availW / availH;
         var renderW, renderH;
@@ -169,12 +169,14 @@
           renderW = Math.floor(renderH * targetAspect);
         }
 
-        canvas.style.width = renderW + "px";
-        canvas.style.height = renderH + "px";
+        // Enforce with !important so Unity WebGL runtime cannot override with fixed dimensions
+        canvas.style.setProperty('width', renderW + 'px', 'important');
+        canvas.style.setProperty('height', renderH + 'px', 'important');
 
-        // Keep desktop footer width matched to game canvas width
+        // Keep desktop floating footer synchronized with canvas width
+        var footer = document.querySelector("#unity-footer");
         if (footer && !isMobileDevice && !isFullscreen) {
-          footer.style.width = renderW + "px";
+          footer.style.width = Math.max(renderW, 260) + 'px';
         }
       }
 
@@ -206,7 +208,7 @@
         }
 
         // Target orientation from game config (default: Portrait if height >= width)
-        var targetOrientation = targetHeight >= targetWidth ? "Portrait" : "Landscape";
+        var targetOrientation = isPortraitGame ? "Portrait" : "Landscape";
         if (window.GameBridge && window.GameBridge.gameData && window.GameBridge.gameData.playerSettings && window.GameBridge.gameData.playerSettings.defaultWebScreenOrientation) {
           targetOrientation = window.GameBridge.gameData.playerSettings.defaultWebScreenOrientation;
         }

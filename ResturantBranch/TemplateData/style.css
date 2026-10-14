@@ -35,26 +35,29 @@ html, body {
 }
 
 #unity-container {
-  position: absolute;
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 0 0 0 0;
 }
 
 #unity-container.unity-desktop {
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  /* Full screen layout - no centering offset needed */
 }
 
 #unity-canvas {
   background: #000;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 1px 1px rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+  box-shadow: 0 0 40px rgba(0, 229, 255, 0.15), 0 20px 50px rgba(0, 0, 0, 0.8);
   display: block;
+  /* JS will set width/height dynamically to fill screen */
+  max-width: 100%;
+  max-height: calc(100vh - 56px); /* 56px = footer height */
 }
 
 .unity-mobile #unity-canvas {
@@ -133,13 +136,18 @@ html, body {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 100%;
-  margin-top: 12px;
-  padding: 8px 16px;
-  background: rgba(22, 25, 38, 0.65);
-  backdrop-filter: blur(8px);
-  border: 1px solid var(--glass-border);
-  border-radius: 10px;
+  height: 48px;
+  flex-shrink: 0;
+  margin-top: 0;
+  padding: 0 20px;
+  background: rgba(11, 13, 20, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--glass-border);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 50;
 }
 
 .unity-mobile #unity-footer {

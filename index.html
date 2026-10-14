@@ -39,14 +39,14 @@
 
       <!-- Warnings / Errors -->
       <div id="unity-warning"></div>
+    </div>
 
-      <!-- Footer Bar -->
-      <div id="unity-footer">
-        <div id="unity-build-title">
-          <span>🎮</span> Rush Food
-        </div>
-        <div id="unity-fullscreen-button" title="Toggle Fullscreen"></div>
+    <!-- Footer Bar (Fixed Bottom) -->
+    <div id="unity-footer">
+      <div id="unity-build-title">
+        <span>🎮</span> Rush Food
       </div>
+      <div id="unity-fullscreen-button" title="Toggle Fullscreen"></div>
     </div>
 
     <!-- ============================================== -->
@@ -216,8 +216,31 @@
         document.body.className = "unity-mobile";
         canvas.className = "unity-mobile";
       } else {
-        canvas.style.width = "600px";
-        canvas.style.height = "960px";
+        // Desktop: fit canvas to viewport maintaining 600:960 aspect ratio
+        var GAME_ASPECT = 600 / 960; // portrait aspect ratio
+        var FOOTER_H = 48;
+
+        function resizeCanvas() {
+          var vw = window.innerWidth;
+          var vh = window.innerHeight - FOOTER_H;
+          var canvasW, canvasH;
+
+          if (vw / vh < GAME_ASPECT) {
+            // width-constrained
+            canvasW = vw;
+            canvasH = vw / GAME_ASPECT;
+          } else {
+            // height-constrained
+            canvasH = vh;
+            canvasW = vh * GAME_ASPECT;
+          }
+
+          canvas.style.width  = canvasW + "px";
+          canvas.style.height = canvasH + "px";
+        }
+
+        resizeCanvas();
+        window.addEventListener("resize", resizeCanvas);
       }
 
       document.querySelector("#unity-loading-bar").style.display = "flex";
